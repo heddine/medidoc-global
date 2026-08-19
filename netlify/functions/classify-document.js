@@ -14,14 +14,12 @@
 // compatibilité) — tenues à jour avec les dictionnaires CATEGORIES/
 // SPECIALITES_PAR_DEFAUT/TYPES_COMPTE_RENDU/TYPES_IMAGERIE de index.html.
 const CATEGORY_DESCRIPTIONS = {
-  vitale:      "Carte Vitale française (carte verte de l'Assurance Maladie avec puce et numéro de sécurité sociale)",
-  mutuelle:    "Carte ou attestation de mutuelle / assurance complémentaire santé (carte de tiers payant, attestation de droits)",
+  complementaire: "Document émis par une mutuelle/assurance complémentaire santé : relevé de remboursement, attestation de droits, courrier",
   imagerie:    "Radiographie, IRM, scanner/TDM ou échographie — les clichés eux-mêmes ou le document qui les accompagne sans être un compte-rendu rédigé",
   analyse:     "Résultats d'analyse de sang ou de biologie médicale (tableau de valeurs, laboratoire)",
   ordonnance:  "Ordonnance médicale : prescription de médicaments ou d'examens, à venir (contient souvent une posologie et la signature du médecin)",
   compterendu: "Compte-rendu médical rédigé par un médecin décrivant les constatations/conclusions d'un examen déjà réalisé",
   rdv:         "Convocation ou confirmation d'un rendez-vous médical FUTUR (date à venir, créneau horaire)",
-  mgen:        "Document émis par la mutuelle MGEN : relevé de remboursement, attestation de droits, courrier MGEN",
   medecin:     "Carte de visite d'un médecin/professionnel de santé ou plaque professionnelle — coordonnées du praticien uniquement, pas un acte médical",
   autre:       "Tout autre document médical qui ne correspond à aucune catégorie ci-dessus"
 };
@@ -98,9 +96,8 @@ Repères pour ne pas confondre les catégories proches :
 - "compterendu" = rapport RÉDIGÉ décrivant les CONSTATATIONS ou conclusions d'un examen déjà réalisé (texte en paragraphes : "Conclusion :", "Résultat de l'examen :"). Si le document accompagne une imagerie (radio, IRM, scanner, écho) sous forme de texte médical interprétatif (pas des images), classe-le "compterendu", pas "imagerie" (qui est réservée aux images de l'examen lui-même).
 - "imagerie" = radios, IRM, scanners/TDM, échographies — qu'il s'agisse des clichés eux-mêmes ou du document qui les accompagne sans être un compte-rendu rédigé.
 - "analyse" = résultats chiffrés d'un laboratoire (tableau de valeurs biologiques, sang/urine).
-- "vitale"/"mutuelle" = carte d'assuré (Carte Vitale, carte de mutuelle), pas un document médical.
 - "rdv" = tout document qui annonce un rendez-vous/une convocation FUTURE : convocation papier, SMS/e-mail de confirmation imprimé, carton de rendez-vous, bon d'examen avec une date à venir. Repère les mots "convocation", "rendez-vous", "vous êtes attendu(e) le", "RDV", une date qui n'est pas encore passée, un créneau horaire. Priorise "rdv" sur les autres catégories dès que ces indices sont présents, même si le document mentionne aussi un type d'examen (IRM, scanner...) à venir — dans ce cas c'est quand même "rdv" (l'examen n'a pas encore eu lieu).
-- "mgen" = tout document émis par la mutuelle MGEN : relevé de remboursement/décompte de prestations, attestation de droits, courrier ou notification MGEN. Repère le logo/nom "MGEN", "décompte", "remboursement mutuelle", "attestation de tiers payant".
+- "complementaire" = tout document émis par une mutuelle/assurance complémentaire santé : relevé de remboursement/décompte de prestations, attestation de droits, courrier ou notification de l'organisme complémentaire. Repère les mots "décompte", "remboursement mutuelle/complémentaire", "attestation de tiers payant".
 - "medecin" = carte de visite d'un médecin/professionnel de santé, plaque professionnelle photographiée, ou tampon de cabinet isolé — un document dont le seul intérêt est les COORDONNÉES du praticien (nom, téléphone, adresse), pas un acte médical du patient. Priorise cette catégorie dès que le document est essentiellement une carte de visite ou une plaque, même s'il mentionne aussi une spécialité.
 
 SPÉCIALITÉ — s'applique à TOUTE catégorie de document, pas seulement les ordonnances. Cherche partout où le nom d'un médecin/spécialiste apparaît : en-tête, tampon, signature, mention "Docteur demandé par", "Prescripteur", "Médecin traitant"... Mets "autre_spe" uniquement si vraiment aucun nom ni spécialité de médecin n'apparaît sur le document. Valeurs possibles :
@@ -114,7 +111,7 @@ ${descTypeImg}
 
 PERSONNE — le document est-il au nom d'un homme ou d'une femme ? Regarde la civilité du PATIENT (pas du médecin) écrite sur le document : "M.", "Monsieur" → "monsieur" ; "Mme", "Madame" → "madame". Si la civilité n'est pas identifiable avec certitude, mets "inconnu".
 
-DATE DE L'EXAMEN — s'applique à TOUTE catégorie (sauf "rdv", voir plus bas ; sauf "vitale"/"mutuelle" qui n'ont pas de date). Cherche la date à laquelle l'examen/l'acte a réellement eu lieu (ou la date de rédaction pour une ordonnance) : "Date de l'examen :", "Réalisé le :", la date en haut du courrier, la date de signature... Format AAAA-MM-JJ. Déduis l'année si elle n'est pas écrite. Si aucune date claire n'est trouvée, mets "".
+DATE DE L'EXAMEN — s'applique à TOUTE catégorie (sauf "rdv", voir plus bas). Cherche la date à laquelle l'examen/l'acte a réellement eu lieu (ou la date de rédaction pour une ordonnance) : "Date de l'examen :", "Réalisé le :", la date en haut du courrier, la date de signature... Format AAAA-MM-JJ. Déduis l'année si elle n'est pas écrite. Si aucune date claire n'est trouvée, mets "".
 
 DATE/HEURE/LIEU DU RDV — ne s'appliquent que si categorie = "rdv" (sinon mets "" pour les trois, et utilise "dateExamen" ci-dessus à la place) :
 - "dateRdv" : la date du rendez-vous au format AAAA-MM-JJ. Déduis l'année si elle n'est pas écrite (à partir du contexte, ou l'année en cours si rien d'autre n'indique le contraire). Si aucune date claire n'est trouvée, mets "".
