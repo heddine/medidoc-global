@@ -1,18 +1,8 @@
-BH5212657005363395/0326/991
-Carte BH3121
-C.E HEDDINECA06322867
-Gmail Heddine 1957@
-FreeHeddine1957!
-416598153443/2392/ 0127/929
-Transavia evelinemagri@yahoo.fr/ Heddine57@/ identité numérique Heddine 57@/code/1957
-5355842581538605 0828 221
-***************************************
-biat4146220027564062/04.29/968
-Cartebiat3633
-
-Identifiant national de compte bancaire - RIB
-08 909 0100351005119 37
- 
-IBAN
-TN59 0890 9010 0351 0051 1937
-********************************************
+{
+  "name": "medidoc-functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
